@@ -7,6 +7,7 @@ import lightbulbIcon from '../assets/lucide/lightbulb.svg';
 import eyeIcon from '../assets/lucide/eye.svg';
 import eyeClosedIcon from '../assets/lucide/eye-closed.svg';
 import arrowRightIcon from '../assets/lucide/arrow-big-right.svg';
+import pudgyGif from '../assets/pudgy.gif';
 import SavedProblems from './SavedProblems';
 
 export default function QuestionView({ topic, onBack, progress, onUpdateProgress, onOpenSaved }) {
@@ -163,8 +164,10 @@ export default function QuestionView({ topic, onBack, progress, onUpdateProgress
     <div>
       <div className="header">
         <h2>{topic.name}</h2>
-        <button className="btn" onClick={onBack}>Back</button>
-        <button className="btn" onClick={handleReset}>Reset Progress</button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button className="btn" onClick={onBack}>Back</button>
+          <button className="btn" onClick={handleReset}>Reset Progress</button>
+        </div>
       </div>
 
       <div className="footer">
@@ -233,9 +236,9 @@ export default function QuestionView({ topic, onBack, progress, onUpdateProgress
           </div>
         </>
       ) : (
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 20 , flexDirection: 'column', display: 'flex', gap: 10 }}>
           <strong>Yay!!!! You finished a topic!! =^ - ^=</strong>
-          <img src="../assets/pudgy.gif" alt="" />
+          <img style={{ maxWidth: '20vw', height: 'auto' }} src={pudgyGif} alt="" />
         </div>
       )}
     </div>
