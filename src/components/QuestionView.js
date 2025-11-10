@@ -180,10 +180,19 @@ export default function QuestionView({ topic, onBack, progress, onUpdateProgress
           <div className="flashcard-container">
             <div className={`flashcard ${isExiting ? 'exit' : rotateClass}`}>
               <div className="flashcard-content">
-                <LatexText text={current.question} />
+                {current.questionText && (
+                  <div style={{ marginBottom: 10 }}>
+                    <LatexText text={current.questionText} />
+                  </div>
+                )}
+                {current.questionLatex && (
+                  <div style={{ fontSize: '1.2rem' }}>
+                    <LatexText text={`$${current.questionLatex}$`} />
+                  </div>
+                )}
               </div>
               
-              {showHint && (
+              {showHint && current.hint && (
                 <div style={{ marginTop: 20 }}>
                   <div><strong>Hint</strong></div>
                   <div className="small"><LatexText text={current.hint} /></div>
@@ -193,12 +202,30 @@ export default function QuestionView({ topic, onBack, progress, onUpdateProgress
               {showAnswer && (
                 <div style={{ marginTop: 20 }}>
                   <div><strong>Answer</strong></div>
-                  <div style={{ fontSize: '1.2rem', marginTop: 10 }}><LatexText text={current.answer} /></div>
+                  {current.answer && (
+                    <div style={{ fontSize: '1.2rem', marginTop: 10 }}>
+                      <LatexText text={current.answer} />
+                    </div>
+                  )}
+                  {current.answerLatex && (
+                    <div style={{ fontSize: '1.2rem', marginTop: 10 }}>
+                      <LatexText text={`$${current.answerLatex}$`} />
+                    </div>
+                  )}
 
-                  {current.solution && (
+                  {(current.solutionText || current.solutionLatex) && (
                     <div style={{ marginTop: 16 }}>
                       <div><strong>Solution</strong></div>
-                      <div className="small"><LatexText text={current.solution} /></div>
+                      {current.solutionText && (
+                        <div className="small" style={{ marginTop: 8 }}>
+                          <LatexText text={current.solutionText} />
+                        </div>
+                      )}
+                      {current.solutionLatex && (
+                        <div className="small" style={{ marginTop: 8 }}>
+                          <LatexText text={`$${current.solutionLatex}$`} />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -208,10 +235,12 @@ export default function QuestionView({ topic, onBack, progress, onUpdateProgress
 
           <div className="controls-panel">
             <div className="controls">
-              <button className="btn" onClick={() => setShowHint(!showHint)}>
-                {showHint ? 'Hide Hint' : 'Show Hint'}
-                <img src={lightbulbIcon} className="btn-icon" alt="" aria-hidden="true" />
-              </button>
+              {current.hint && (
+                <button className="btn" onClick={() => setShowHint(!showHint)}>
+                  {showHint ? 'Hide Hint' : 'Show Hint'}
+                  <img src={lightbulbIcon} className="btn-icon" alt="" aria-hidden="true" />
+                </button>
+              )}
               <button className="btn" onClick={() => setShowAnswer(!showAnswer)}>
                 {showAnswer ? 'Hide Answer' : 'Show Answer & Solution'}
                 <img src={showAnswer ? eyeClosedIcon : eyeIcon} className="btn-icon" alt="" aria-hidden="true" />

@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ClusterSelect from './components/ClusterSelect';
 import TopicSelect from './components/TopicSelect';
 import QuestionView from './components/QuestionView';
 import HomeView from './components/HomeView';
 import SavedProblems from './components/SavedProblems';
 import Sidebar from './components/Sidebar';
-import { loadQuestions, loadProgress, saveProgress } from './utils';
+import { loadQuestions, loadProgress, saveProgress, cleanupInvalidProgress } from './utils';
 
 import './index.css';
 
 function App() {
+  const [dataVersion, setDataVersion] = useState(0);
   const data = loadQuestions();
   const [selectedCluster, setSelectedCluster] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [view, setView] = useState('home'); // home | cluster | topic | saved
   const [progress, setProgress] = useState(loadProgress());
+
+  useEffect(() => {
+    // Clean up any invalid saved/completed questions on mount
+    const cleaned = cleanupInvalidProgress();
+    setProgress(cleaned);
+  }, []);
 
   function updateProgress(next) {
     try {
@@ -23,6 +30,15 @@ function App() {
       // saveProgress already logs errors
     }
     setProgress(next);
+  }
+
+  function handleDataUpdate() {
+    // Increment version to force re-render and reload questions
+    setDataVersion(v => v + 1);
+    // Reset view to home when new data is loaded
+    setView('home');
+    setSelectedCluster(null);
+    setSelectedTopic(null);
   }
 
   return (
@@ -50,6 +66,7 @@ function App() {
           setView('cluster-topics');
         }}
         onOpenSaved={() => setView('saved')}
+        onDataUpdate={handleDataUpdate}
       />
       <div className="main-content">
         <div className="header">

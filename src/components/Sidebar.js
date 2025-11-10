@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { loadQuestions, getProgressSummary } from '../utils';
+import ImportCSV from './ImportCSV';
 import houseIcon from '../assets/lucide/house.svg';
 import arrowLeftIcon from '../assets/lucide/arrow-left.svg';
 import menuIcon from '../assets/lucide/menu.svg';
 
-export default function Sidebar({ onOpenCluster, onOpenSaved, onOpenHome, selectedCluster, selectedTopic, progress }) {
+export default function Sidebar({ onOpenCluster, onOpenSaved, onOpenHome, selectedCluster, selectedTopic, progress, onDataUpdate }) {
   const [collapsed, setCollapsed] = useState(false);
   const data = loadQuestions();
   const summary = getProgressSummary(data, progress || { completedQuestions: [], savedQuestions: [] });
@@ -28,10 +29,11 @@ export default function Sidebar({ onOpenCluster, onOpenSaved, onOpenHome, select
         </button>
       </div>
       <div className="sidebar-content">
-        <div className="sidebar-saved" style={{ display: 'flex', gap: '0rem' }}>
+        <div className="sidebar-saved" style={{ display: 'flex', gap: '0.5rem' }}>
           <button className="btn" onClick={onOpenHome}>Home</button>
           <button className="btn" onClick={onOpenSaved}>Saved Questions</button>
         </div>
+        
         {summary.map((cluster, ci) => {
           const clusterActive = selectedCluster === cluster.name;
           const clusterPercent = cluster.total ? Math.round((cluster.completed / cluster.total) * 100) : 0;
@@ -60,6 +62,8 @@ export default function Sidebar({ onOpenCluster, onOpenSaved, onOpenHome, select
             </div>
           );
         })}
+        
+        <ImportCSV onImportComplete={onDataUpdate} />
       </div>
     </div>
   );

@@ -11,6 +11,13 @@ export default function SavedProblems({ onOpenTopic, progress, onUpdateProgress 
     const savedIds = (p && p.savedQuestions) || [];
     const list = savedIds.map(id => findQuestionById(data, id)).filter(Boolean);
     setSavedQuestions(list);
+    
+    // Clean up invalid saved question IDs
+    if (list.length !== savedIds.length && onUpdateProgress) {
+      const validIds = list.map(q => q.id);
+      const next = { ...p, savedQuestions: validIds };
+      onUpdateProgress(next);
+    }
   }
 
   function reloadCompleted(p) {
@@ -72,7 +79,8 @@ export default function SavedProblems({ onOpenTopic, progress, onUpdateProgress 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ maxWidth: '60%' }}>
                     <div><strong>#{q.id}</strong></div>
-                    <div className="small"><LatexText text={q.question} /></div>
+                    {q.questionText && <div className="small"><LatexText text={q.questionText} /></div>}
+                    {q.questionLatex && <div className="small"><LatexText text={`$${q.questionLatex}$`} /></div>}
                   </div>
                   <div>
                     <button className="btn" onClick={(e) => { e.stopPropagation(); onOpenTopic(q.cluster, q.topic); }}>View</button>
@@ -95,7 +103,8 @@ export default function SavedProblems({ onOpenTopic, progress, onUpdateProgress 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ maxWidth: '60%' }}>
                     <div><strong>#{q.id}</strong></div>
-                    <div className="small"><LatexText text={q.question} /></div>
+                    {q.questionText && <div className="small"><LatexText text={q.questionText} /></div>}
+                    {q.questionLatex && <div className="small"><LatexText text={`$${q.questionLatex}$`} /></div>}
                   </div>
                   <div>
                     <button className="btn" onClick={(e) => { e.stopPropagation(); onOpenTopic(q.cluster, q.topic); }}>Open Question</button>
