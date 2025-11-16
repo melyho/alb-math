@@ -92,7 +92,9 @@ function convertToQuestionFormat(rows) {
 }
 
 // Main execution
-const csvPath = path.join(__dirname, '../src/data/4.2.4, 4.3, 5.1.csv');
+// Allow overriding CSV path via --csv=PATH, default to all-questions.answered.csv
+const argCsv = process.argv.find(a => a.startsWith('--csv='));
+const csvPath = argCsv ? path.resolve(argCsv.split('=')[1]) : path.join(__dirname, '../src/data/all-questions.answered.csv');
 const jsonPath = path.join(__dirname, '../src/data/questions.json');
 
 console.log('Reading CSV file:', csvPath);
